@@ -1,0 +1,13 @@
+version: "3.6"
+services: 
+  go-http:
+    build: "."
+    ports: 
+      - "8080"
+  
+  nginx:
+    build: "./devops/nginx"
+    ports: 
+      - "80:80"
+    depends_on: 
+      - "go-http"
