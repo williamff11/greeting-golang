@@ -4,19 +4,28 @@ import "testing"
 
 func TestGreeting(t *testing.T) {
 
-	emptyResult := greeting("") // should return "empty :("
+	emptyResult := test_greeting("") // should return "empty :("
 
 	if emptyResult != "empty :("{
-		t.Errorf("greeting(\"\") failed, expect %v, got %v", "empty :(", emptyResult)
+		t.Errorf("test_greeting(\"\") failed, expect %v, got %v", "empty :(", emptyResult)
 	}else {
-		t.Logf("greeting(\"\") success, expect %v, got %v", "empty :(", emptyResult)
+		t.Logf("test_greeting(\"\") success, expect %v, got %v", "empty :(", emptyResult)
 	}
 
-	result := greeting("Code.education Rocks!")
+	result := test_greeting("Code.education Rocks!")
 
 	if result != "Code.education Rocks!" {
-		t.Errorf("greeting(\"Code.education Rocks!\") failed, expect %v, got %v", "Code.education Rocks!", result)
+		t.Errorf("test_greeting(\"Code.education Rocks!\") failed, expect %v, got %v", "Code.education Rocks!", result)
 	}else {
-		t.Logf("greeting(\"Code.education Rocks!\") success, expect %v, got %v", "empty :(", emptyResult)
+		t.Logf("test_greeting(\"Code.education Rocks!\") success, expect %v, got %v", "empty :(", emptyResult)
+	}
+
+}
+
+func test_greeting(text string) string {
+	if (len(text) == 0 ) {
+		return "empty :("
+	} else {
+		return text
 	}
 }
