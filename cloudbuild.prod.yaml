@@ -1,0 +1,40 @@
+steps:
+  - id: "Run Go_Test"
+    name: "gcr.io/cloud-builders/go"
+    args: ["test","greeting_test.go"]
+    env: ["GOPATH=."]
+    
+  - id: "Building image from Dockerfile.prod"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/app-greeting:$SHORT_SHA",
+        "-f",
+        "Dockerfile.prod",
+        ".",
+      ]
+
+  - id: "Pushing image"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/app-greeting:$SHORT_SHA"]
+
+  - id: "Adjusting deployment file - k8s"
+    name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "/bin/sh"
+    args:
+      - "-c"
+      - |
+        sed 's#img-app-deployment#gcr.io/$PROJECT_ID/app-greeting:$SHORT_SHA#g' k8s/nginx/deployment.yaml > k8s/nginx/deployment-new.yaml;
+        cat k8s/nginx/deployment-new.yaml;
+
+  - id: "Deployment k8s"
+    name: "gcr.io/cloud-builders/kubectl"
+    args:
+      - "apply"
+      - "-f"
+      - "k8s/nginx/deployment-new.yaml"
+    env:
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1-c"
+      - "CLOUDSDK_CONTAINER_CLUSTER=cluster-docker-laravel"
