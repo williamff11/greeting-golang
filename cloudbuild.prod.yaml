@@ -4,7 +4,7 @@ steps:
     args: ["test","greeting_test.go"]
     env: ["GOPATH=."]
     
-  - id: "Building image from Dockerfile.prod"
+  - id: "Building image from Dockerfile"
     name: "gcr.io/cloud-builders/docker"
     args:
       [
@@ -12,7 +12,7 @@ steps:
         "-t",
         "gcr.io/$PROJECT_ID/app-greeting:$SHORT_SHA",
         "-f",
-        "Dockerfile.prod",
+        "Dockerfile",
         ".",
       ]
 
@@ -26,15 +26,15 @@ steps:
     args:
       - "-c"
       - |
-        sed 's#img-app-deployment#gcr.io/$PROJECT_ID/app-greeting:$SHORT_SHA#g' k8s/nginx/deployment.yaml > k8s/nginx/deployment-new.yaml;
-        cat k8s/nginx/deployment-new.yaml;
+        sed 's#img-app-deployment#gcr.io/$PROJECT_ID/app-greeting:$SHORT_SHA#g' k8s/app/deployment.yaml > k8s/app/deployment-new.yaml;
+        cat k8s/app/deployment-new.yaml;
 
   - id: "Deployment k8s"
     name: "gcr.io/cloud-builders/kubectl"
     args:
       - "apply"
       - "-f"
-      - "k8s/nginx/deployment-new.yaml"
+      - "k8s/app/deployment-new.yaml"
     env:
       - "CLOUDSDK_COMPUTE_ZONE=us-central1-c"
       - "CLOUDSDK_CONTAINER_CLUSTER=cluster-docker-laravel"

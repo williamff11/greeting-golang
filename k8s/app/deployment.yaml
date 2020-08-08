@@ -20,15 +20,15 @@ template:
       ports:
       - containerPort: 80
 
-      volumeMounts:
-       - mountPath: /usr/share/nginx/html
-         name: nginx-html
-         readOnly: true
+    #   volumeMounts:
+    #    - mountPath: /usr/share/nginx/html
+    #      name: nginx-html
+    #      readOnly: true
         
-    volumes:
-    - name: nginx-html
-      configMap:
-        name: nginx-html
-        items:
-          - key: index.html
-            path: index.html
+    # volumes:
+    # - name: nginx-html
+    #   configMap:
+    #     name: nginx-html
+    #     items:
+    #       - key: index.html
+    #         path: index.html
